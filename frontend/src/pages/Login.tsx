@@ -1,14 +1,39 @@
 import { useState, useEffect } from "react";
-import { FaUser } from "react-icons/fa";
+import { FaSignInAlt } from "react-icons/fa";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { login, reset } from "../features/auth/authSlice";
+import type { AppDispatch } from "../app/store";
+import Spinner from "../components/Spinner";
 
 function Login() {
   const [formData, setFormData] = useState({
-    userName: "",
     email: "",
     password: "",
   });
 
-  const { userName, email, password } = formData;
+  const { email, password } = formData;
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (state: any) => state.auth
+  );
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(message);
+    }
+
+    console.log(user, "USER");
+    if (isSuccess || user) {
+      navigate("/");
+    }
+    dispatch(reset());
+  }, [user, isError, isSuccess, message, navigate, dispatch]);
+
 
   const onChange = (e: any) => {
     setFormData((prevState) => ({
@@ -19,13 +44,24 @@ function Login() {
 
   const onSubmit = (e: any) => {
     e.preventDefault();
+
+    const userData = {
+      email,
+      password,
+    };
+
+    dispatch(login(userData));
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <>
       <section className="heading">
-        <h1>
-          <FaUser /> Login
+        <h1 className="flex justify-center items-center gap-2">
+          <FaSignInAlt/> Login
         </h1>
         <p>Please enter your credentials</p>
       </section>

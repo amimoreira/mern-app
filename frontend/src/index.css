@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 * {
   margin: 0;
@@ -18,14 +20,6 @@ a {
 
 p {
   line-height: 1.7;
-}
-
-ul {
-  list-style: none;
-}
-
-li {
-  line-height: 2.2;
 }
 
 h1,
@@ -86,7 +80,35 @@ header {
   color: #828282;
 }
 
+ul {
+  list-style-type: none; /* Elimina los puntos de la lista */
+  display: flex; /* Alinea los elementos en una fila */
+  gap: 20px; /* Espaciado entre los elementos */
+}
 
+li {
+  display: flex;
+  align-items: center; /* Alinea verticalmente los elementos dentro del li */
+}
+
+.dropdown {
+  position: relative; /* Necesario para el menú desplegable */
+}
+
+.dropdown-menu {
+  display: none; /* Oculta el menú por defecto */
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: block;
+  background-color: white;
+  border: 1px solid #ddd;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block; /* Muestra el menú cuando se pasa el ratón sobre el botón */
+}
 
 .form,
 .content {

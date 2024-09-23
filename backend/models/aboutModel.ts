@@ -1,5 +1,5 @@
 // backend\models\aboutModel.ts
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const aboutSchema = new mongoose.Schema(
   {
@@ -8,6 +8,11 @@ const aboutSchema = new mongoose.Schema(
       required: true,
       ref: "User",
     },
+    id: {
+      type: mongoose.Schema.Types.ObjectId,
+      default: () => new mongoose.Types.ObjectId(),
+    },
+
     name: {
       type: String,
       required: true,
@@ -23,4 +28,4 @@ const aboutSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("About", aboutSchema)
+module.exports = mongoose.model("About", aboutSchema);

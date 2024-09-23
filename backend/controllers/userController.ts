@@ -30,16 +30,10 @@ export const loginUsers = asynsHandler(async (req: Request, res: Response) => {
 });
 
 // @desc Get user data
-// @route GET /api/users/me
-// @access Public
+// @route GET /api/users/me  
+// @access Private
 export const getMe = asynsHandler(async (req: AuthenticatedRequest, res: Response) => {
-  const { _id, userName, email } = await User.findById(req.user.id);
-
-  res.status(200).json({
-    id: _id,
-    userName,
-    email,
-  }); 
+  res.status(200).json(req.user); 
 
 });
 

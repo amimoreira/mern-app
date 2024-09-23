@@ -17,6 +17,20 @@ const getExps = asyncHandler(
   }
 );
 
+// @desc    Get experience
+// @route   GET /api/exps/:id
+// @access  Private
+const getExp = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+  const exp = await Experience.findById(req.params.id);
+
+  if (!exp) {
+    res.status(400);
+    throw new Error("exp not found");
+  }
+
+  res.status(200).json(exp);
+});
+
 // @desc    Set experience
 // @route   POST /api/exps
 // @access  Private
@@ -98,6 +112,7 @@ const deleteExp = asyncHandler(async (req: AuthenticatedRequest, res: Response) 
 
 module.exports = {
   getExps,
+  getExp,
   setExp,
   updateExp,
   deleteExp,

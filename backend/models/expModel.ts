@@ -8,6 +8,10 @@ const expSchema = new mongoose.Schema(
       required: true,
       ref: "User",
     },
+    id: {
+      type: mongoose.Schema.Types.ObjectId,
+      default: () => new mongoose.Types.ObjectId(),
+    },
     company: {
       type: String,
       required: true,

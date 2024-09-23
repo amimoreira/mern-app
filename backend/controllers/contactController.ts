@@ -17,6 +17,20 @@ const getContacts = asyncHandler(
   }
 );
 
+// @desc    Get Contact
+// @route   GET /api/Contacts/:id
+// @access  Private
+const getContact = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+  const contact = await Contact.findById(req.params.id);
+
+  if (!contact) {
+    res.status(400);
+    throw new Error("Contact not found");
+  }
+
+  res.status(200).json(contact);
+});
+
 // @desc    Set Contact
 // @route   POST /api/Contacts
 // @access  Private
@@ -28,6 +42,8 @@ const setContact = asyncHandler(async (req: AuthenticatedRequest, res: Response)
 
   const contact = await Contact.create({
     name: req.body.name,
+    lastName: req.body.lastName,
+    phone: req.body.phone,
     email: req.body.email,
     user: req.user.id,
   });
@@ -95,6 +111,7 @@ const deleteContact = asyncHandler(async (req: AuthenticatedRequest, res: Respon
 
 module.exports = {
   getContacts,
+  getContact,
   setContact,
   updateContact,
   deleteContact,
