@@ -51,6 +51,15 @@ const setAbout = asyncHandler(
       throw new Error("Active field must be true or false");
     }
 
+    //Check if there's already an active about
+    if (req.body.active === true) {
+      const activeAbout = await About.findOne({ user: req.user.id, active: true });
+      if (activeAbout) {
+        res.status(400);
+        throw new Error("There is already an active About. Only one About can be active.");
+      }
+    }
+
     const about = await About.create({
       name: req.body.name,
       description: req.body.description,
@@ -88,6 +97,16 @@ const updateAbout = asyncHandler(async (req: AuthenticatedRequest, res: Response
     res.status(401);
     throw new Error("User not authorized");
   }
+
+   // Check if there's already an active About (only if updating to active=true)
+   if (req.body.active === true && about.active === false) {
+    const activeAbout = await About.findOne({ user: req.user.id, active: true });
+    if (activeAbout) {
+      res.status(400);
+      throw new Error("There is already an active About. Only one About can be active.");
+    }
+  }
+  
 
   const updatedAbout = await About.findByIdAndUpdate(
     req.params.id,

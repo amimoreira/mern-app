@@ -69,7 +69,7 @@ const updateContact = asyncHandler(async (req: AuthenticatedRequest, res: Respon
   }
 
   // Make sure the logged in user matches the Contact user
-  if (Contact.user.toString() !== req.user.id) {
+  if (contact.user.toString() !== req.user.id) {
     res.status(401);
     throw new Error("User not authorized");
   }
@@ -99,7 +99,7 @@ const deleteContact = asyncHandler(async (req: AuthenticatedRequest, res: Respon
   }
 
   // Make sure the logged in user matches the Contact user
-  if (Contact.user.toString() !== req.user.id) {
+  if (contact.user.toString() !== req.user.id) {
     res.status(401);
     throw new Error("User not authorized");
   }

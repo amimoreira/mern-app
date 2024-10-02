@@ -8,11 +8,6 @@ const aboutSchema = new mongoose.Schema(
       required: true,
       ref: "User",
     },
-    id: {
-      type: mongoose.Schema.Types.ObjectId,
-      default: () => new mongoose.Types.ObjectId(),
-    },
-
     name: {
       type: String,
       required: true,

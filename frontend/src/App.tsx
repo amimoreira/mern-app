@@ -12,6 +12,8 @@ import About from "./pages/About/About";
 import AddAbout from "./pages/About/add";
 import EditAbout from "./pages/About/edit";
 import Contact from "./pages/Contact/Contact";
+import AddContact from "./pages/Contact/add";
+import EditContact from "./pages/Contact/edit";
 
 
 function App() {
@@ -31,6 +33,8 @@ function App() {
             <Route path="/about/edit/:id" element={<EditAbout />} />
             <Route path="/about/add" element={<AddAbout />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/contact/edit/:id" element={<EditContact />} />
+            <Route path="/contact/add" element={<AddContact />} />
           </Routes>
         </div>
       </Router>

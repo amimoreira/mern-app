@@ -91,7 +91,7 @@ function Experience() {
                     <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500 w-auto">
                       {exp.position}
                     </td>
-                    <td className="px-6 py-4 text-center text-sm text-gray-500 break-words w-auto">
+                    <td className="px-6 py-4 text-justify text-sm text-gray-500 break-words w-auto">
                       {exp.description}
                     </td>
                     <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500 w-auto">
