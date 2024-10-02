@@ -50,7 +50,7 @@ function Contact() {
 
   return (
     <div className="flex flex-col">
-      <h1 className="text-2xl font-bold mb-4">Contactos</h1>
+      <h1 className="text-2xl font-bold mb-4">Contacto</h1>
       <div className="bg-gray-100 p-6">
         <div className="flex justify-end p-2">
           <button

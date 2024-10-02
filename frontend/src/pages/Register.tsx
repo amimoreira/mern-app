@@ -66,9 +66,9 @@ function Register() {
     <>
       <section className="heading">
         <h1 className="flex justify-center items-center gap-2">
-          <FaUser /> Register
+          <FaUser /> Registrar
         </h1>
-        <p>Please create an account</p>
+        <p>Por favor, cree una cuenta</p>
       </section>
       <section className="form">
         <form onSubmit={onSubmit}>
@@ -117,7 +117,7 @@ function Register() {
             />
           </div>
           <div className="form-group">
-            <button className="btn btn-block">Submit</button>
+            <button className="btn btn-block">Aceptar</button>
           </div>
         </form>
       </section>

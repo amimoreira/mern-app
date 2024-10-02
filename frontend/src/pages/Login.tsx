@@ -61,9 +61,9 @@ function Login() {
     <>
       <section className="heading">
         <h1 className="flex justify-center items-center gap-2">
-          <FaSignInAlt/> Login
+          <FaSignInAlt/> Iniciar Sesión
         </h1>
-        <p>Please enter your credentials</p>
+        <p>Por favor, inicie sesión</p>
       </section>
       <section className="form">
         <form onSubmit={onSubmit}>
@@ -90,7 +90,7 @@ function Login() {
             />
           </div>
           <div className="form-group">
-            <button className="btn btn-block">Submit</button>
+            <button className="btn btn-block">Aceptar</button>
           </div>
         </form>
       </section>

@@ -101,7 +101,7 @@ function Header() {
                   className="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded focus:outline-none"
                   onClick={onLogout}
                 >
-                  <FaSignOutAlt /> Logout
+                  <FaSignOutAlt /> Cerrar Sesión
                 </button>
               </li>
             </>
@@ -112,7 +112,7 @@ function Header() {
                   to="/login"
                   className="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded focus:outline-none"
                 >
-                  <FaSignInAlt /> Login
+                  <FaSignInAlt /> Iniciar Sesión
                 </Link>
               </li>
               <li>
@@ -120,7 +120,7 @@ function Header() {
                   to="/register"
                   className="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded focus:outline-none"
                 >
-                  <FaUser /> Register
+                  <FaUser /> Registrar
                 </Link>
               </li>
             </>
