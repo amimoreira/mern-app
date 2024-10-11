@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 import Spinner from "../components/Spinner";
 import { jsPDF } from "jspdf";
-import autoTable from "jspdf-autotable"; // Importar autoTable
 import type { AppDispatch } from "../app/store";
 import { getExps } from "../features/experience/expSlice";
 import { getAbouts } from "../features/about/aboutSlice";
@@ -41,6 +40,10 @@ function Dashboard() {
   // Filtrar el About activo
   const activeAbout = abouts?.find((about: any) => about.active === true);
 
+  const activeContact = contacts?.find(
+    (contact: any) => contact.active === true
+  );
+
   const downloadPDF = () => {
     const doc = new jsPDF();
 
@@ -52,40 +55,51 @@ function Dashboard() {
 
     // Dibuja el fondo azul
     const contactBackgroundHeight = 8; // Altura del fondo azul
-    const contactWidth = 80; // Ancho del fondo azul
+    const contactWidth = 100; // Ancho del fondo azul
     const marginTop = 5; // Margen superior que deseas agregar
 
-    if (contacts && contacts.length > 0) {
-      contacts.forEach(
-        (contact: { name: any; lastName: any; email: any; phone: any }) => {
-          doc.setFillColor(0, 102, 204); // Establece el color azul (RGB: azul brillante)
-          doc.rect(
-            16,
-            currentY - contactBackgroundHeight + 3 - marginTop,
-            contactWidth,
-            contactBackgroundHeight * 4 + marginTop,
-            "F"
-          ); // Dibuja el rectángulo de fondo
+    if (activeContact) {
+      doc.setFillColor(75, 85, 99);
+      doc.rect(
+        25,
+        currentY - contactBackgroundHeight + 3 - marginTop,
+        contactWidth,
+        contactBackgroundHeight * 4 + marginTop,
+        "F"
+      ); // Dibuja el rectángulo de fondo
 
-          // Nombre y Apellidos
-          doc.setFontSize(18);
-          doc.setTextColor(255, 255, 255); // Cambia el color del texto a blanco
-          doc.text(`${contact.name} ${contact.lastName}`, 20, currentY);
-          currentY += 10;
+      // Nombre y Apellidos
+      doc.setFontSize(18);
+      doc.setTextColor(255, 255, 255); // Cambia el color del texto a blanco
+      doc.text(`${activeContact.name} ${activeContact.lastName}`, 30, currentY);
+      currentY += 10;
 
-          // Email
-          doc.setFontSize(14);
-          doc.text(`Email: ${contact.email}`, 20, currentY);
-          currentY += 10;
+      // Email
+      doc.setFontSize(14);
+      doc.text(`Email: ${activeContact.email}`, 30, currentY);
+      currentY += 10;
 
-          // Teléfono
-          doc.text(`Teléfono: ${contact.phone}`, 20, currentY);
-          currentY += 10; // Espacio entre contactos
-        }
-      );
+      // Teléfono
+      doc.text(`Teléfono: ${activeContact.phone}`, 30, currentY);
+      currentY += 10; // Espacio entre contactos
+
+      // Añadir foto en formato Base64
+      if (activeContact.photo) {
+        const imgWidth = 40; // Ancho de la imagen
+        const imgHeight = 40; // Altura de la imagen
+        doc.addImage(
+          activeContact.photo,
+          "JPEG",
+          140,
+          currentY - imgHeight,
+          imgWidth,
+          imgHeight
+        ); // Ajusta la posición y tamaño
+        currentY += 5; // Incrementar Y para el siguiente contacto
+      }
     } else {
-      // Dibuja el fondo azul para el mensaje de no hay contactos disponibles
-      doc.setFillColor(0, 102, 204);
+    
+      doc.setFillColor(75, 85, 99);
       doc.rect(
         20,
         currentY - contactBackgroundHeight + 3,
@@ -101,7 +115,7 @@ function Dashboard() {
     // Sección About
     currentY += 10;
     doc.setTextColor(0, 0, 0); // Cambia el color del texto a negro
-    doc.setFontSize(16);
+    doc.setFontSize(14);
     // Establece el ancho máximo permitido para el texto del "About"
     const aboutWidth = 170; // Ajusta el valor según el ancho que desees
 
@@ -138,7 +152,7 @@ function Dashboard() {
       }) => {
         // Nombre de la empresa y posición
         const backgroundHeight = 10; // Altura del fondo azul
-        doc.setFillColor(0, 102, 204); // Establece el color de fondo (RGB: azul)
+        doc.setFillColor(75, 85, 99);
         doc.rect(
           16,
           currentY - backgroundHeight + 3,
@@ -183,7 +197,9 @@ function Dashboard() {
     );
 
     // Guardar el PDF
-    doc.save("Cv.pdf");
+    if (activeContact) {
+      doc.save(`CV - ${activeContact.name} ${activeContact.lastName}.pdf`);
+    }
   };
 
   return (
@@ -209,16 +225,25 @@ function Dashboard() {
             </div>
             <div className="w-2/5 p-2">
               <div className="overflow-x-auto w-full bg-gray-200">
-                {contacts && contacts.length > 0 ? (
-                  contacts.map((contact: any) => (
-                    <div key={contact.id} className="text-center py-4">
-                      <h1 className="text-2xl font-semibold">
-                        {contact.name} {contact.lastName}
-                      </h1>
-                      <p> Email: {contact.email}</p>
-                      <p> Teléfono: {contact.phone}</p>
-                    </div>
-                  ))
+                {activeContact ? (
+                  <div className="text-center py-4">
+                    <img
+                      className="rounded-full w-20 h-20 mx-auto"
+                      src={
+                        activeContact.photo &&
+                        !activeContact.photo.startsWith("data:image")
+                          ? activeContact.photo
+                          : `${activeContact.photo}`
+                      }
+                      alt={activeContact.name}
+                    />
+                    <br />
+                    <h1 className="text-2xl font-semibold">
+                      {activeContact.name} {activeContact.lastName}
+                    </h1>
+                    <p> Email: {activeContact.email}</p>
+                    <p> Teléfono: {activeContact.phone}</p>
+                  </div>
                 ) : (
                   <p>No hay contactos disponibles.</p>
                 )}

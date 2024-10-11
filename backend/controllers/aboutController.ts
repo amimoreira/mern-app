@@ -23,7 +23,6 @@ const getAbouts = asyncHandler(
 // @access  Private
 const getAbout = asyncHandler(
   async (req: AuthenticatedRequest, res: Response) => {
-    
     const about = await About.findById(req.params.id);
 
     if (!about) {
@@ -40,7 +39,6 @@ const getAbout = asyncHandler(
 // @access  Private
 const setAbout = asyncHandler(
   async (req: AuthenticatedRequest, res: Response) => {
-    
     if (!req.body.name || !req.body.description) {
       res.status(400);
       throw new Error("Please add a text field");
@@ -53,10 +51,15 @@ const setAbout = asyncHandler(
 
     //Check if there's already an active about
     if (req.body.active === true) {
-      const activeAbout = await About.findOne({ user: req.user.id, active: true });
+      const activeAbout = await About.findOne({
+        user: req.user.id,
+        active: true,
+      });
       if (activeAbout) {
         res.status(400);
-        throw new Error("There is already an active About. Only one About can be active.");
+        throw new Error(
+          "There is already an active About. Only one About can be active."
+        );
       }
     }
 
@@ -74,48 +77,55 @@ const setAbout = asyncHandler(
 // @desc    Update About
 // @route   PUT /api/Abouts/:id
 // @access  Private
-const updateAbout = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    res.status(400);
-    throw new Error("Invalid ID format");
-  }
-
-  const about = await About.findById(req.params.id);
-
-  if (!about || !about.user) { // Verifica que `about` y `about.user` estén definidos
-    res.status(404);
-    throw new Error("About not found or user not associated");
-  }
-
-  if (!req.user) {
-    res.status(401);
-    throw new Error("User not found");
-  }
-
-  // Asegúrate de que `about.user` esté definido antes de llamar a `toString()`
-  if (about.user.toString() !== req.user.id) {
-    res.status(401);
-    throw new Error("User not authorized");
-  }
-
-   // Check if there's already an active About (only if updating to active=true)
-   if (req.body.active === true && about.active === false) {
-    const activeAbout = await About.findOne({ user: req.user.id, active: true });
-    if (activeAbout) {
+const updateAbout = asyncHandler(
+  async (req: AuthenticatedRequest, res: Response) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       res.status(400);
-      throw new Error("There is already an active About. Only one About can be active.");
+      throw new Error("Invalid ID format");
     }
+
+    const about = await About.findById(req.params.id);
+
+    if (!about || !about.user) {
+      // Verifica que `about` y `about.user` estén definidos
+      res.status(404);
+      throw new Error("About not found or user not associated");
+    }
+
+    if (!req.user) {
+      res.status(401);
+      throw new Error("User not found");
+    }
+
+    // Asegúrate de que `about.user` esté definido antes de llamar a `toString()`
+    if (about.user.toString() !== req.user.id) {
+      res.status(401);
+      throw new Error("User not authorized");
+    }
+
+    // Check if there's already an active About (only if updating to active=true)
+    if (req.body.active === true && about.active === false) {
+      const activeAbout = await About.findOne({
+        user: req.user.id,
+        active: true,
+      });
+      if (activeAbout) {
+        res.status(400);
+        throw new Error(
+          "There is already an active About. Only one About can be active."
+        );
+      }
+    }
+
+    const updatedAbout = await About.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
+    res.status(200).json(updatedAbout);
   }
-  
-
-  const updatedAbout = await About.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    { new: true }
-  );
-
-  res.status(200).json(updatedAbout);
-});
+);
 
 // @desc    Delete About
 // @route   DELETE /api/Abouts/:id
@@ -129,10 +139,11 @@ const deleteAbout = asyncHandler(
 
     const about = await About.findById(req.params.id);
 
-     if (!about || !about.user) { // Verifica que `about` y `about.user` estén definidos
-    res.status(404);
-    throw new Error("About not found or user not associated");
-  }
+    if (!about || !about.user) {
+      // Verifica que `about` y `about.user` estén definidos
+      res.status(404);
+      throw new Error("About not found or user not associated");
+    }
 
     // Check for user
     if (!req.user) {
@@ -152,10 +163,4 @@ const deleteAbout = asyncHandler(
   }
 );
 
-module.exports = {
-  getAbouts,
-  getAbout,
-  setAbout,
-  updateAbout,
-  deleteAbout,
-};
+export { getAbouts, getAbout, setAbout, updateAbout, deleteAbout };

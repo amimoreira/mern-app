@@ -25,6 +25,12 @@ const contactSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    photo: {
+      type: String,
+    }, 
+    active: {
+      type: Boolean,
+    },
   },
   { timestamps: true }
 );

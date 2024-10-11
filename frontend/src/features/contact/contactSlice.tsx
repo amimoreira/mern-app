@@ -8,6 +8,8 @@ interface Contact {
   lastName: string;
   phone: number;
   email: string;
+  photo: string;
+  active: boolean;
 }
 
 const initialState: {
@@ -33,6 +35,8 @@ export const createContact = createAsyncThunk(
       lastName: string;
       phone: number;
       email: string;
+      photo: string;
+      active: boolean;
     },
     thunkAPI
   ) => {
@@ -54,21 +58,24 @@ export const createContact = createAsyncThunk(
 );
 
 // Get contact
-export const getContacts = createAsyncThunk("contacts/getAll", async (_, thunkAPI) => {
-  try {
-    const token = (thunkAPI.getState() as RootState).auth.user.token;
-    return await contactService.getContacts(token);
-  } catch (error) {
-    let message;
+export const getContacts = createAsyncThunk(
+  "contacts/getAll",
+  async (_, thunkAPI) => {
+    try {
+      const token = (thunkAPI.getState() as RootState).auth.user.token;
+      return await contactService.getContacts(token);
+    } catch (error) {
+      let message;
 
-    if (error instanceof Error) {
-      message = error.message;
-    } else {
-      message = String(error);
+      if (error instanceof Error) {
+        message = error.message;
+      } else {
+        message = String(error);
+      }
+      return thunkAPI.rejectWithValue(message);
     }
-    return thunkAPI.rejectWithValue(message);
   }
-});
+);
 
 // Get experience by id
 export const getContact = createAsyncThunk(
@@ -94,18 +101,12 @@ export const getContact = createAsyncThunk(
 export const updateContact = createAsyncThunk(
   "contacts/update",
   async (
-    contactData: {
-      id: string;
-      name: string;
-      lastName: string;
-      phone: number;
-      email: string;
-    },
+    { contactData, id }: { contactData: { name: string; lastName: string; phone: number; email: string; photo: string; active: boolean }; id: string },
     thunkAPI
   ) => {
     try {
       const token = (thunkAPI.getState() as RootState).auth.user.token;
-      return await contactService.updateContact(contactData, token);
+      return await contactService.updateContact(contactData, id, token);
     } catch (error) {
       let message;
 
@@ -182,7 +183,12 @@ export const contactSlice = createSlice({
       .addCase(updateContact.fulfilled, (state, action: PayloadAction<any>) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.contacts.push(action?.payload);
+        const index = state.contacts.findIndex(
+          (contact) => contact._id === action.payload._id
+        );
+        if (index !== -1) {
+          state.contacts[index] = action.payload; // Actualiza el contacto en el estado
+        }
       })
       .addCase(updateContact.rejected, (state, action: PayloadAction<any>) => {
         state.isLoading = false;
@@ -196,7 +202,9 @@ export const contactSlice = createSlice({
       .addCase(deleteContact.fulfilled, (state, action: PayloadAction<any>) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.contacts = state.contacts.filter((contact) => contact._id !== action.payload.id);
+        state.contacts = state.contacts.filter(
+          (contact) => contact._id !== action.payload.id
+        );
       })
       .addCase(deleteContact.rejected, (state, action: PayloadAction<any>) => {
         state.isLoading = false;
@@ -210,7 +218,12 @@ export const contactSlice = createSlice({
       .addCase(getContact.fulfilled, (state, action: PayloadAction<any>) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.contacts = state.contacts.filter((contact) => contact._id !== action.payload.id);
+        const index = state.contacts.findIndex(
+          (contact) => contact._id === action.payload._id
+        );
+        if (index !== -1) {
+          state.contacts[index] = action.payload; // Actualiza el contacto obtenido por ID
+        }
       })
       .addCase(getContact.rejected, (state, action: PayloadAction<any>) => {
         state.isLoading = false;

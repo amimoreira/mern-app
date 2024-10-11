@@ -14,7 +14,7 @@ function About() {
   const { abouts, isLoading, isError, message } = useSelector(
     (state: any) => state.abouts
   );
-  
+
   useEffect(() => {
     if (isError) {
       console.log(message);
@@ -38,6 +38,12 @@ function About() {
 
   const handleAdd = () => {
     navigate("/about/add");
+  };
+
+  const handleDelete = (id: string) => {
+    if (window.confirm("¿Estás seguro de que quieres eliminar este perfil?")) {
+      dispatch(deleteAbout(id));
+    }
   };
 
   if (isLoading) {
@@ -78,28 +84,34 @@ function About() {
                     <td className="px-6 py-4 text-center whitespace-nowrap text-sm font-medium text-gray-900 w-auto">
                       {about.name}
                     </td>
-                    <td className="px-6 py-4 text-center text-sm text-gray-500 break-words w-auto">
+                    <td className="px-6 py-4 text-justify  text-sm text-gray-500 break-words w-auto">
                       {about.description}
                     </td>
-                    <td className="flex  px-4 py-4 text-center text-sm text-gray-500  w-auto">
-                      <button className="flex items-center gap-2 ml-4 text-green-600 hover:text-green-800 focus:outline-none">
-                        {about.active ? <FaRegCheckSquare /> : <FaRegSquare />}
-                        {about.active ? "Activo" : "Inactivo"}
-                      </button>
-                      <button
-                        onClick={() => handleEdit(about.id)}
-                        className="flex items-center gap-2 ml-4 text-blue-600 hover:text-blue-800 focus:outline-none"
-                      >
-                        <FaEdit />
-                        Editar
-                      </button>
-                      <button
-                        onClick={() => dispatch(deleteAbout(about.id))}
-                        className="flex items-center gap-2 ml-4 text-red-600 hover:text-red-800 focus:outline-none"
-                      >
-                        <FaTrash />
-                        Eliminar
-                      </button>
+                    <td className="px-4 py-4 text-center whitespace-nowrap text-sm text-gray-500 w-auto">
+                      <div className="flex justify-center space-x-4">
+                        <button className="flex items-center gap-2  text-green-600 hover:text-green-800 focus:outline-none">
+                          {about.active ? (
+                            <FaRegCheckSquare />
+                          ) : (
+                            <FaRegSquare />
+                          )}
+                          {about.active ? "Activo" : "Inactivo"}
+                        </button>
+                        <button
+                          onClick={() => handleEdit(about.id)}
+                          className="flex items-center gap-2  text-blue-600 hover:text-blue-800 focus:outline-none"
+                        >
+                          <FaEdit />
+                          Editar
+                        </button>
+                        <button
+                          onClick={() => handleDelete(about.id)}
+                          className="flex items-center gap-2  text-red-600 hover:text-red-800 focus:outline-none"
+                        >
+                          <FaTrash />
+                          Eliminar
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))

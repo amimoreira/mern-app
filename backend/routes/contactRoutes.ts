@@ -1,16 +1,26 @@
-import express from 'express'
-const router = express.Router()
-const {
+import express from "express";
+import {
   getContacts,
   getContact,
   setContact,
   updateContact,
   deleteContact,
-} = require('../controllers/contactController')
+} from "../controllers/contactController";
+import { protect } from "../middleware/authMiddleware";
+import upload from "../middleware/upload";
 
-const { protect } = require('../middleware/authMiddleware')
+const router = express.Router();
 
-router.route('/').get(protect, getContacts).post(protect, setContact)
-router.route('/:id').delete(protect, deleteContact).put(protect, updateContact).get(protect, getContact)
+// Rutas para contactos
+router
+  .route("/")
+  .get(protect, getContacts)
+  .post(protect, upload.single("photo"), setContact);
+router
+  .route("/:id")
+  .delete(protect, deleteContact)
+  .put(protect, upload.single("photo"), updateContact)
+  .get(protect, getContact);
 
-module.exports = router
+// Exportar el router correctamente
+export default router;

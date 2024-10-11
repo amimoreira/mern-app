@@ -3,7 +3,14 @@ const API_URL = "http://localhost:5000/api/contacts";
 
 // Create Contact
 const createContact = async (
-  contactData: { name: string; lastName: string; phone: number; email: string },
+  contactData: {
+    name: string;
+    lastName: string;
+    phone: number;
+    email: string;
+    photo: string;
+    active: boolean;
+  },
   token: string
 ) => {
   const config = {
@@ -30,6 +37,8 @@ const getContacts = async (token: string) => {
     lastName: contact.lastName,
     phone: contact.phone,
     email: contact.email,
+    photo: contact.photo,
+    active: contact.active,
   }));
 
   return contacts;
@@ -50,6 +59,8 @@ const getContact = async (id: string, token: string) => {
     lastName: response.data.lastName,
     phone: response.data.phone,
     email: response.data.email,
+    photo: response.data.photo,
+    active: response.data.active,
   };
   return contact;
 };
@@ -57,12 +68,14 @@ const getContact = async (id: string, token: string) => {
 // Update contact
 const updateContact = async (
   contactData: {
-    id: string;
     name: string;
     lastName: string;
     phone: number;
     email: string;
+    photo: string;
+    active: boolean;
   },
+  id: string,
   token: string
 ) => {
   const config = {
@@ -71,7 +84,7 @@ const updateContact = async (
     },
   };
 
-  const response = await axios.put(`${API_URL}/${contactData.id}`, contactData, config);
+  const response = await axios.put(`${API_URL}/${id}`, contactData, config);
   return response.data;
 };
 
